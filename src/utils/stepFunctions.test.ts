@@ -22,7 +22,7 @@ jest.mock('aws-sdk', () => {
 });
 
 describe('stepfunctions utils', () => {
-  const AWS = require('aws-sdk');
+  import * as AWS from 'aws-sdk';
   const stepFunctions = AWS.StepFunctions;
 
   const [region, stateMachineArn] = ['region', 'stateMachineArn'];

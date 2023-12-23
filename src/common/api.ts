@@ -1,5 +1,5 @@
 import { Method } from 'axios';
-import { PlainObject } from '../utils/api';
+import { PlainObject } from '../utils/api.js';
 
 export interface IApiProps {
   method: Method;

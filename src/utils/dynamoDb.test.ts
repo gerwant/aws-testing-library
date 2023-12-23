@@ -17,7 +17,7 @@ jest.mock('aws-sdk', () => {
 });
 
 describe('dynamoDb utils', () => {
-  const AWS = require('aws-sdk');
+  import * as AWS from 'aws-sdk';
   const db = AWS.DynamoDB;
   const documentClient = AWS.DynamoDB.DocumentClient;
 

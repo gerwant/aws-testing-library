@@ -21,7 +21,7 @@ jest.mock('aws-sdk', () => {
 });
 
 describe('kinesis utils', () => {
-  const AWS = require('aws-sdk');
+  import * as AWS from 'aws-sdk';
   const kinesis = AWS.Kinesis;
 
   const [region, stream, matcher, timeout] = [

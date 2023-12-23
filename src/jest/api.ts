@@ -1,8 +1,8 @@
 import { diff } from 'jest-diff';
 import { EOL } from 'os';
-import { verifyProps } from '../common';
-import { expectedProps, IApiProps, IExpectedResponse } from '../common/api';
-import { getResponse } from '../utils/api';
+import { verifyProps } from '../common/index.js';
+import { expectedProps, IApiProps, IExpectedResponse } from '../common/api.js';
+import { getResponse } from '../utils/api.js';
 
 export const toReturnResponse = async function (
   this: jest.MatcherUtils,

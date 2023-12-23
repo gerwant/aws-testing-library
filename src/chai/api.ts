@@ -1,7 +1,7 @@
-import { verifyProps } from '../common';
-import { expectedProps, IApiProps, IExpectedResponse } from '../common/api';
-import { getResponse } from '../utils/api';
-import { wrapWithRetries } from './utils';
+import { verifyProps } from '../common/index.js';
+import { expectedProps, IApiProps, IExpectedResponse } from '../common/api.js';
+import { getResponse } from '../utils/api.js';
+import { wrapWithRetries } from './utils.js';
 
 const attemptApi = async function (
   this: any,

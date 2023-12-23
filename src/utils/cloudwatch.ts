@@ -1,4 +1,4 @@
-import AWS = require('aws-sdk');
+import { CloudWatchLogs } from '@aws-sdk/client-cloudwatch-logs';
 
 export const getLogGroupName = (functionName: string) =>
   `/aws/lambda/${functionName}`;
@@ -9,7 +9,9 @@ export const filterLogEvents = async (
   startTime: number,
   filterPattern: string,
 ) => {
-  const cloudWatchLogs = new AWS.CloudWatchLogs({ region });
+  const cloudWatchLogs = new CloudWatchLogs({
+    region,
+  });
 
   const { events = [] } = await cloudWatchLogs
     .filterLogEvents({
@@ -18,14 +20,15 @@ export const filterLogEvents = async (
       limit: 1,
       logGroupName,
       startTime,
-    })
-    .promise();
+    });
 
   return { events };
 };
 
 const getLogStreams = async (region: string, functionName: string) => {
-  const cloudWatchLogs = new AWS.CloudWatchLogs({ region });
+  const cloudWatchLogs = new CloudWatchLogs({
+    region,
+  });
   const logGroupName = getLogGroupName(functionName);
 
   const { logStreams = [] } = await cloudWatchLogs
@@ -33,8 +36,7 @@ const getLogStreams = async (region: string, functionName: string) => {
       descending: true,
       logGroupName,
       orderBy: 'LastEventTime',
-    })
-    .promise();
+    });
 
   return { logStreams };
 };
@@ -44,7 +46,9 @@ export const deleteAllLogs = async (region: string, functionName: string) => {
   if (logStreams.length <= 0) {
     return;
   }
-  const cloudWatchLogs = new AWS.CloudWatchLogs({ region });
+  const cloudWatchLogs = new CloudWatchLogs({
+    region,
+  });
   const logGroupName = getLogGroupName(functionName);
 
   const logStreamNames = logStreams.map((s) => s.logStreamName || '');
@@ -52,8 +56,7 @@ export const deleteAllLogs = async (region: string, functionName: string) => {
   await Promise.all(
     logStreamNames.map((logStreamName) => {
       return cloudWatchLogs
-        .deleteLogStream({ logGroupName, logStreamName })
-        .promise();
+        .deleteLogStream({ logGroupName, logStreamName });
     }),
   );
 };

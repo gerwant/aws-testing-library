@@ -1,7 +1,7 @@
 import { EOL } from 'os';
-import { expectedProps, ICloudwatchProps } from '../common/cloudwatch';
-import { epochDateMinusHours, verifyProps } from '../common/index';
-import { filterLogEvents, getLogGroupName } from '../utils/cloudwatch';
+import { expectedProps, ICloudwatchProps } from '../common/cloudwatch.js';
+import { epochDateMinusHours, verifyProps } from '../common/index.js';
+import { filterLogEvents, getLogGroupName } from '../utils/cloudwatch.js';
 
 export const toHaveLog = async function (
   this: jest.MatcherUtils,

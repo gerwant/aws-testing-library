@@ -1,4 +1,4 @@
-import { ICommonProps, sleep } from '../common';
+import { ICommonProps, sleep } from '../common/index.js';
 
 interface IMatchResult {
   pass: boolean;

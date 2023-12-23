@@ -1,17 +1,19 @@
-import AWS = require('aws-sdk');
+import { ExecutionStatus, HistoryEvent, SFN } from '@aws-sdk/client-sfn';
 
 const getExecutions = async (
   region: string,
   stateMachineArn: string,
-  statusFilter?: string,
+  statusFilter?: ExecutionStatus,
 ) => {
-  const stepFunctions = new AWS.StepFunctions({ region });
+  const stepFunctions = new SFN({
+    region,
+  });
   const opts = {
     maxResults: 1,
     stateMachineArn,
     ...(statusFilter && { statusFilter }),
   };
-  const result = await stepFunctions.listExecutions(opts).promise();
+  const result = await stepFunctions.listExecutions(opts);
 
   const { executions } = result;
 
@@ -20,7 +22,7 @@ const getExecutions = async (
 
 const RUNNING = 'RUNNING';
 
-export const getEventName = (event: AWS.StepFunctions.HistoryEvent) => {
+export const getEventName = (event: HistoryEvent) => {
   const { name } = event.stateEnteredEventDetails ||
     event.stateExitedEventDetails || {
       name: undefined,
@@ -33,15 +35,17 @@ export const getCurrentState = async (
   stateMachineArn: string,
 ) => {
   const executions = await getExecutions(region, stateMachineArn, RUNNING);
-  if (executions.length > 0) {
+  if (executions && executions.length > 0) {
     const newestRunning = executions[0]; // the first is the newest one
 
-    const stepFunctions = new AWS.StepFunctions({ region });
+    const stepFunctions = new SFN({
+      region,
+    });
     const { executionArn } = newestRunning;
     const { events } = await stepFunctions
-      .getExecutionHistory({ executionArn, reverseOrder: true, maxResults: 1 })
-      .promise();
-    if (events.length > 0) {
+      .getExecutionHistory({ executionArn, reverseOrder: true, maxResults: 1 });
+    // TODO: Maybe reverse this if?
+    if (events && events.length > 0) {
       const newestEvent = events[0];
       const name = getEventName(newestEvent);
       return name;
@@ -54,16 +58,16 @@ export const getCurrentState = async (
 
 export const getStates = async (region: string, stateMachineArn: string) => {
   const executions = await getExecutions(region, stateMachineArn);
-  if (executions.length > 0) {
+  if (executions && executions.length > 0) {
     const newestRunning = executions[0]; // the first is the newest one
 
-    const stepFunctions = new AWS.StepFunctions({ region });
+    const stepFunctions = new SFN({
+      region,
+    });
     const { executionArn } = newestRunning;
     const { events } = await stepFunctions
-      .getExecutionHistory({ executionArn, reverseOrder: true })
-      .promise();
-    const names = events
-      .map((event) => getEventName(event))
+      .getExecutionHistory({ executionArn, reverseOrder: true });
+    const names = events?.map((event) => getEventName(event))
       .filter((name) => !!name);
     return names;
   }
@@ -74,12 +78,14 @@ export const stopRunningExecutions = async (
   region: string,
   stateMachineArn: string,
 ) => {
-  const stepFunctions = new AWS.StepFunctions({ region });
+  const stepFunctions = new SFN({
+    region,
+  });
   const executions = await getExecutions(region, stateMachineArn, RUNNING);
 
   await Promise.all(
-    executions.map(({ executionArn }) =>
-      stepFunctions.stopExecution({ executionArn }).promise(),
-    ),
+    executions?.map(({ executionArn }) =>
+      stepFunctions.stopExecution({ executionArn }),
+    ) || [],
   );
 };

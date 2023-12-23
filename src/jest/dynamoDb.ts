@@ -1,18 +1,19 @@
 import { diff } from 'jest-diff';
 import { EOL } from 'os';
-import { verifyProps } from '../common';
+import { verifyProps } from '../common/index.js';
 import {
   expectedProps,
   IDynamoDbProps,
   removeKeysFromItemForNonStrictComparison,
-} from '../common/dynamoDb';
-import { getItem } from '../utils/dynamoDb';
+} from '../common/dynamoDb.js';
+import { getItem } from '../utils/dynamoDb.js';
+import { AttributeValue } from '@aws-sdk/client-dynamodb';
 
 export const toHaveItem = async function (
   this: jest.MatcherUtils,
   props: IDynamoDbProps,
-  key: AWS.DynamoDB.DocumentClient.Key,
-  expected?: AWS.DynamoDB.DocumentClient.AttributeMap,
+  key: Record<string, any>,
+  expected?: Record<string, AttributeValue>,
   strict = true,
 ) {
   verifyProps({ ...props, key }, expectedProps);

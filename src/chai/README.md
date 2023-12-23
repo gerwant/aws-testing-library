@@ -2,7 +2,7 @@
 
 ```js
 const awsTesting = require('aws-testing-library/lib/chai').default;
-const chai = require('chai');
+const chai from 'chai';
 chai.use(awsTesting);
 
 const { expect } = chai;
@@ -14,7 +14,7 @@ const { expect } = chai;
 
 ```typescript
 import awsTesting from 'aws-testing-library/lib/chai';
-import chai = require('chai');
+import chai from 'chai';
 
 chai.use(awsTesting);
 

@@ -1,4 +1,4 @@
-import { ICommonProps } from './';
+import { ICommonProps } from './index.js';
 
 export interface ISqsProps extends ICommonProps {
   queueUrl: string;

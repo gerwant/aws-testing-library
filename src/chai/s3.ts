@@ -1,7 +1,7 @@
-import { verifyProps } from '../common';
-import { expectedProps, IS3Props } from '../common/s3';
-import { getObject } from '../utils/s3';
-import { wrapWithRetries } from './utils';
+import { verifyProps } from '../common/index.js';
+import { expectedProps, IS3Props } from '../common/s3.js';
+import { getObject } from '../utils/s3.js';
+import { wrapWithRetries } from './utils.js';
 
 const attemptS3 = async function (
   this: any,

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import chai = require('chai');
+import chai from 'chai';
 import * as common from '../common';
-import './';
+import './index.js';
 import cloudwatch from './cloudwatch';
 
 jest.mock('../utils/cloudwatch');

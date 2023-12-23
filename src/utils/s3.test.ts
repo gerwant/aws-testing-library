@@ -13,7 +13,7 @@ jest.mock('aws-sdk', () => {
 });
 
 describe('s3 utils', () => {
-  const AWS = require('aws-sdk');
+  import * as AWS from 'aws-sdk';
   const s3 = AWS.S3;
 
   const [region, bucket] = ['region', 'bucket'];

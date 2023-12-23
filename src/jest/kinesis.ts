@@ -1,7 +1,7 @@
 import { EOL } from 'os';
-import { verifyProps } from '../common';
-import { expectedProps, IKinesisProps } from '../common/kinesis';
-import { existsInStream, IRecordMatcher } from '../utils/kinesis';
+import { verifyProps } from '../common/index.js';
+import { expectedProps, IKinesisProps } from '../common/kinesis.js';
+import { existsInStream, IRecordMatcher } from '../utils/kinesis.js';
 
 export const toHaveRecord = async function (
   this: jest.MatcherUtils,

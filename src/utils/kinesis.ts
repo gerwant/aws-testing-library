@@ -1,12 +1,12 @@
-import { Kinesis } from 'aws-sdk';
+import { Kinesis } from '@aws-sdk/client-kinesis';
 
 export type IRecordMatcher = (args: any) => boolean;
 
 const getRecords = async (kinesis: Kinesis, shardIterator: string) => {
   const { NextShardIterator: nextShardIterator, Records: records } =
-    await kinesis.getRecords({ ShardIterator: shardIterator }).promise();
+    await kinesis.getRecords({ ShardIterator: shardIterator });
 
-  const data = records.map((r) => JSON.parse(r.Data.toString()));
+  const data = records?.map((r) => JSON.parse(r.Data!.toString()));
 
   return { nextShardIterator, data };
 };
@@ -35,8 +35,8 @@ export const existsInShard = async (
     const records = await getRecords(kinesis, nextShardIterator);
     const data = records.data;
 
-    const index = data.findIndex(matcher);
-    if (index >= 0) {
+    const index = data?.findIndex(matcher);
+    if (index && index >= 0) {
       found = true;
       break;
     }
@@ -65,22 +65,23 @@ export const existsInStream = async (
   timeout: number,
   pollEvery = 500,
 ) => {
-  const kinesis = new Kinesis({ region });
+  const kinesis = new Kinesis({
+    region,
+  });
   const streamDescription = await kinesis
-    .describeStream({ StreamName: stream })
-    .promise();
+    .describeStream({ StreamName: stream });
 
   const shardIterators = await Promise.all(
     // search in all shards
-    streamDescription.StreamDescription.Shards.map((s) => {
+    // TODO: Make it safe
+    streamDescription.StreamDescription!.Shards!.map((s) => {
       return kinesis
         .getShardIterator({
           ShardId: s.ShardId,
           ShardIteratorType: 'AT_TIMESTAMP',
           StreamName: stream,
           Timestamp: new Date(Date.now() - 1000 * 60 * 5), // start searching from 5 minutes ago
-        })
-        .promise();
+        });
     }),
   );
 

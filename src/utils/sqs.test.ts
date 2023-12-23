@@ -41,7 +41,7 @@ jest.mock('uuid', () => {
 });
 
 describe('kinesis utils', () => {
-  const AWS = require('aws-sdk');
+  import * as AWS from 'aws-sdk';
   const sqs = AWS.SQS;
   const sns = AWS.SNS;
 

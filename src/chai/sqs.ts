@@ -1,7 +1,7 @@
-import { verifyProps } from '../common';
-import { expectedProps, ISqsProps } from '../common/sqs';
-import { existsInQueue, IMessageMatcher } from '../utils/sqs';
-import { wrapWithRetries } from './utils';
+import { verifyProps } from '../common/index.js';
+import { expectedProps, ISqsProps } from '../common/sqs.js';
+import { existsInQueue, IMessageMatcher } from '../utils/sqs.js';
+import { wrapWithRetries } from './utils.js';
 
 declare global {
   namespace Chai {

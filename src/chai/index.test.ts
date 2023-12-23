@@ -9,7 +9,7 @@ jest.mock('./stepFunctions');
 
 describe('index', () => {
   test('calls all modules functions', () => {
-    const awsTesting = require('./').default;
+    const awsTesting = require('./index.js').default;
     const [api, cloudwatch, dynamoDb, kinesis, s3, sqs, stepFunctions] = [
       require('./api').default,
       require('./cloudwatch').default,

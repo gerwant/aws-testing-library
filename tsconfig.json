@@ -1,13 +1,18 @@
 {
-  "extends": "@tsconfig/node16/tsconfig.json",
   "compilerOptions": {
     "sourceMap": true,
     "noImplicitReturns": true,
-    "strict": true,
     "noUnusedLocals": true,
     "declaration": true,
     "outDir": "./lib",
-    "allowJs": true
+    "allowJs": true,
+    "lib": ["es2023"],
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "target": "es2022",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "**/*.test.ts"]

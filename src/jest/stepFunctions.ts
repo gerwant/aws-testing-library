@@ -1,8 +1,8 @@
 import { diff } from 'jest-diff';
 import { EOL } from 'os';
-import { verifyProps } from '../common';
-import { expectedProps, IStepFunctionsProps } from '../common/stepFunctions';
-import { getCurrentState, getStates } from '../utils/stepFunctions';
+import { verifyProps } from '../common/index.js';
+import { expectedProps, IStepFunctionsProps } from '../common/stepFunctions.js';
+import { getCurrentState, getStates } from '../utils/stepFunctions.js';
 
 export const toBeAtState = async function (
   this: jest.MatcherUtils,
@@ -65,7 +65,7 @@ export const toHaveState = async function (
     const hint = this.utils.matcherHint('.toHaveState') + EOL + EOL;
 
     const states = await getStates(region, stateMachineArn);
-    const pass = states.includes(expected);
+    const pass = states?.includes(expected);
     if (pass) {
       return {
         message: () =>
