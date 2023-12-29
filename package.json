@@ -11,7 +11,7 @@
     "coverage": "jest --coverage",
     "format": "prettier --write src/**/*.ts",
     "format:ci": "prettier --list-different src/**/*.ts",
-    "prepare": "husky install"
+    "prepare": "npm run build"
   },
   "files": [
     "lib"
