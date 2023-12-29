@@ -1,4 +1,4 @@
-import { S3, NoSuchKey, S3ServiceException } from '@aws-sdk/client-s3';
+import { S3, S3ServiceException } from '@aws-sdk/client-s3';
 
 const listAllKeys = async (
   region: string,
