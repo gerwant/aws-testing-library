@@ -3,7 +3,6 @@ import { EOL } from 'os';
 import { verifyProps } from '../common/index.js';
 import { expectedProps, IS3Props } from '../common/s3.js';
 import { getObject } from '../utils/s3.js';
-import { off } from 'process';
 
 export const toHaveObject = async function (
   this: jest.MatcherUtils,
