@@ -31,20 +31,21 @@ export const clearAllObjects = async (
   prefix?: string,
 ) => {
   const allKeys = await listAllKeys(region, bucket, prefix, undefined);
-  if (allKeys.length > 0) {
-    const s3 = new S3({
-      region,
-    });
-    const objects = allKeys.map((item) => ({ Key: item.Key || '' }));
-    await s3
-      .deleteObjects({
-        Bucket: bucket,
-        Delete: {
-          Objects: objects,
-          Quiet: false,
-        },
-      });
+  if (allKeys.length == 0) {
+    return;
   }
+  const s3 = new S3({
+    region,
+  });
+  const objects = allKeys.map((item) => ({ Key: item.Key || '' }));
+  await s3
+    .deleteObjects({
+      Bucket: bucket,
+      Delete: {
+        Objects: objects,
+        Quiet: false,
+      },
+    });
 };
 
 export const getObject = async (

@@ -38,15 +38,17 @@ export const clearAllItems = async (region: string, tableName: string) => {
     });
   const items = scanResult.Items || [];
 
-  if (items.length > 0) {
-    for (const chunk of chunks(items, 25)) {
-      const deleteRequests = chunk.map((item) => ({
-        DeleteRequest: { Key: itemToKey(item, keySchema) },
-      }));
+  if (items.length == 0) {
+    return undefined;
+  }
 
-      await db
-        .batchWrite({ RequestItems: { [tableName]: deleteRequests } });
-    }
+  for (const chunk of chunks(items, 25)) {
+    const deleteRequests = chunk.map((item) => ({
+      DeleteRequest: { Key: itemToKey(item, keySchema) },
+    }));
+
+    await db
+      .batchWrite({ RequestItems: { [tableName]: deleteRequests } });
   }
 };
 

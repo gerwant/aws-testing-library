@@ -35,43 +35,37 @@ export const getCurrentState = async (
   stateMachineArn: string,
 ) => {
   const executions = await getExecutions(region, stateMachineArn, RUNNING);
-  if (executions && executions.length > 0) {
-    const newestRunning = executions[0]; // the first is the newest one
-
-    const stepFunctions = new SFN({
-      region,
-    });
-    const { executionArn } = newestRunning;
-    const { events } = await stepFunctions
-      .getExecutionHistory({ executionArn, reverseOrder: true, maxResults: 1 });
-    // TODO: Maybe reverse this if?
-    if (events && events.length > 0) {
-      const newestEvent = events[0];
-      const name = getEventName(newestEvent);
-      return name;
-    } else {
-      return undefined;
-    }
+  if (!executions || executions.length == 0) {
+    return undefined;
   }
-  return undefined;
+  const newestRunning = executions[0]; // the first is the newest one
+
+  const stepFunctions = new SFN({
+    region,
+  });
+  const { executionArn } = newestRunning;
+  const { events } = await stepFunctions
+    .getExecutionHistory({ executionArn, reverseOrder: true, maxResults: 1 });
+
+  return (events && events.length>0) ? getEventName(events[0]) : undefined;
 };
 
 export const getStates = async (region: string, stateMachineArn: string) => {
   const executions = await getExecutions(region, stateMachineArn);
-  if (executions && executions.length > 0) {
-    const newestRunning = executions[0]; // the first is the newest one
-
-    const stepFunctions = new SFN({
-      region,
-    });
-    const { executionArn } = newestRunning;
-    const { events } = await stepFunctions
-      .getExecutionHistory({ executionArn, reverseOrder: true });
-    const names = events?.map((event) => getEventName(event))
-      .filter((name) => !!name);
-    return names;
+  if (!executions || executions.length == 0) {
+    return []
   }
-  return [];
+  const newestRunning = executions[0]; // the first is the newest one
+
+  const stepFunctions = new SFN({
+    region,
+  });
+  const { executionArn } = newestRunning;
+  const { events } = await stepFunctions
+    .getExecutionHistory({ executionArn, reverseOrder: true });
+  const names = events?.map((event) => getEventName(event))
+    .filter((name) => !!name);
+  return names;
 };
 
 export const stopRunningExecutions = async (

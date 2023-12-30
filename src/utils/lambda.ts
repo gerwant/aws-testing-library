@@ -16,9 +16,5 @@ export const invoke = async (
   };
 
   const { Payload } = await lambda.invoke(params);
-  if (Payload) {
-    return JSON.parse(Payload.toString());
-  } else {
-    return undefined;
-  }
+  return Payload ? JSON.parse(Payload.toString()) : undefined;
 };
