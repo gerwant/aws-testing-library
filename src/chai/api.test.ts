@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { Method } from 'axios';
-import chai = require('chai');
-import './';
+import chai from 'chai';
+import './index.js';
 import api from './api';
 
 jest.mock('../common');

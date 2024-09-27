@@ -1,22 +1,25 @@
-import { IExpectedResponse } from '../common/api';
-import { IRecordMatcher } from '../utils/kinesis';
-import { IMessageMatcher } from '../utils/sqs';
-import { toReturnResponse } from './api';
-import { toHaveLog } from './cloudwatch';
-import { toHaveItem } from './dynamoDb';
-import { toHaveRecord } from './kinesis';
-import { toHaveObject } from './s3';
-import { toHaveMessage } from './sqs';
-import { toBeAtState, toHaveState } from './stepFunctions';
-import { wrapWithRetries } from './utils';
+import { jest } from '@jest/globals'
+
+import { IExpectedResponse } from '../common/api.js';
+import { IRecordMatcher } from '../utils/kinesis.js';
+import { IMessageMatcher } from '../utils/sqs.js';
+import { toReturnResponse } from './api.js';
+import { toHaveLog } from './cloudwatch.js';
+import { toHaveItem } from './dynamoDb.js';
+import { toHaveRecord } from './kinesis.js';
+import { toHaveObject } from './s3.js';
+import { toHaveMessage } from './sqs.js';
+import { toBeAtState, toHaveState } from './stepFunctions.js';
+import { wrapWithRetries } from './utils.js';
+import { AttributeValue } from '@aws-sdk/client-dynamodb';
 
 declare global {
   namespace jest {
     interface Matchers<R> {
       toBeAtState: (state: string) => R;
       toHaveItem: (
-        key: AWS.DynamoDB.DocumentClient.Key,
-        expectedItem?: AWS.DynamoDB.DocumentClient.AttributeMap,
+        key: Record<string, any>,
+        expectedItem?: Record<string, AttributeValue>,
         strict?: boolean,
       ) => R;
       toHaveLog: (pattern: string) => R;

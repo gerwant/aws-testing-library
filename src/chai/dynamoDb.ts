@@ -1,18 +1,19 @@
-import { verifyProps } from '../common';
+import { verifyProps } from '../common/index.js';
 import {
   expectedProps,
   IDynamoDbProps,
   removeKeysFromItemForNonStrictComparison,
-} from '../common/dynamoDb';
-import { getItem } from '../utils/dynamoDb';
-import { wrapWithRetries } from './utils';
+} from '../common/dynamoDb.js';
+import { getItem } from '../utils/dynamoDb.js';
+import { wrapWithRetries } from './utils.js';
+import { AttributeValue } from '@aws-sdk/client-dynamodb';
 
 const attemptDynamoDb = async function (
   this: any,
   eql: any,
   objDisplay: any,
-  key: AWS.DynamoDB.DocumentClient.Key,
-  expected: AWS.DynamoDB.DocumentClient.AttributeMap,
+  key: Record<string, any>,
+  expected: Record<string, AttributeValue>,
   strict: boolean,
 ) {
   const props = this._obj as IDynamoDbProps;
@@ -53,8 +54,8 @@ const dynamoDb = (chai: any, { eql, objDisplay }: any) => {
     'item',
     async function (
       this: any,
-      key: AWS.DynamoDB.DocumentClient.Key,
-      expected?: AWS.DynamoDB.DocumentClient.AttributeMap,
+      key: Record<string, any>,
+      expected?: Record<string, AttributeValue>,
       strict = true,
     ) {
       const wrapped = wrapWithRetries(attemptDynamoDb);

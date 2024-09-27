@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { deleteAllLogs, filterLogEvents as getEvents } from './cloudwatch';
+import { deleteAllLogs, filterLogEvents as getEvents } from './cloudwatch.js';
 
 jest.mock('aws-sdk', () => {
   const deleteLogStreamValue = { promise: jest.fn() };
@@ -17,7 +17,7 @@ jest.mock('aws-sdk', () => {
 });
 
 describe('cloudwatch utils', () => {
-  const AWS = require('aws-sdk');
+  const AWS = require('aws-sdk')
   const cloudWatchLogs = AWS.CloudWatchLogs;
 
   const [region, logGroupName] = ['region', `/aws/lambda/functionName`];

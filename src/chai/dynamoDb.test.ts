@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import chai = require('chai');
-import './';
+import chai from 'chai';
+import './index.js';
 import dynamoDb from './dynamoDb';
 
 jest.mock('../common');

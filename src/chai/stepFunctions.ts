@@ -1,7 +1,7 @@
-import { verifyProps } from '../common';
-import { expectedProps, IStepFunctionsProps } from '../common/stepFunctions';
-import { getCurrentState, getStates } from '../utils/stepFunctions';
-import { wrapWithRetries } from './utils';
+import { verifyProps } from '../common/index.js';
+import { expectedProps, IStepFunctionsProps } from '../common/stepFunctions.js';
+import { getCurrentState, getStates } from '../utils/stepFunctions.js';
+import { wrapWithRetries } from './utils.js';
 
 declare global {
   namespace Chai {
@@ -36,7 +36,7 @@ const attemptHaveState = async function (this: any, state: string) {
   const { region, stateMachineArn } = props;
 
   const states = await getStates(region, stateMachineArn);
-  const pass = states.includes(state);
+  const pass = states ? states.includes(state) : false;
 
   return {
     message: `expected ${stateMachineArn} to have state ${state}`,

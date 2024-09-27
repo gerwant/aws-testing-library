@@ -4,6 +4,8 @@
 [![Build](https://github.com/erezrokah/aws-testing-library/workflows/AWS%20Testing%20Library%20CI/badge.svg)](https://github.com/erezrokah/aws-testing-library/actions)
 [![Coverage Status](https://coveralls.io/repos/github/erezrokah/aws-testing-library/badge.svg?branch=main)](https://coveralls.io/github/erezrokah/aws-testing-library?branch=main)
 
+This repository is a fork of erezrokah/aws-testing-library. Creating this fork was motivated by a need of having modernized testing framework, which utilizes esmodules (new syntax, exports etc.) and new AWS SDK v3. Upstream version seems to be a bit outdated, has problems with dependencies, doesn't use AWS SDK v3 and the roadmap for its further development and/or maintenance is not clearly specified.
+
 > Note: If you're missing any capability please open an issue/feature request :)
 
 ## Prerequisites

@@ -1,4 +1,5 @@
-import AWS = require('aws-sdk');
+import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
+import { DynamoDB, KeySchemaElement } from '@aws-sdk/client-dynamodb';
 
 function* chunks<T>(arr: T[], n: number): Generator<T[], void> {
   for (let i = 0; i < arr.length; i += n) {
@@ -7,70 +8,71 @@ function* chunks<T>(arr: T[], n: number): Generator<T[], void> {
 }
 
 const itemToKey = (
-  item: AWS.DynamoDB.DocumentClient.AttributeMap,
-  keySchema: AWS.DynamoDB.KeySchemaElement[],
+  item: Record<string, any>,
+  keySchema: KeySchemaElement[],
 ) => {
-  let itemKey: AWS.DynamoDB.DocumentClient.Key = {};
+  let itemKey: Record<string, any> = {};
   keySchema.map((key) => {
-    itemKey = { ...itemKey, [key.AttributeName]: item[key.AttributeName] };
+    // TODO: Make it safe
+    itemKey = { ...itemKey, [key.AttributeName!]: item[key.AttributeName!] };
   });
   return itemKey;
 };
 
 export const clearAllItems = async (region: string, tableName: string) => {
   // get the table keys
-  const table = new AWS.DynamoDB({ region });
+  const table = new DynamoDB({
+    region,
+  });
   const { Table = {} } = await table
-    .describeTable({ TableName: tableName })
-    .promise();
+    .describeTable({ TableName: tableName });
 
   const keySchema = Table.KeySchema || [];
 
   // get the items to delete
-  const db = new AWS.DynamoDB.DocumentClient({ region });
+  const db = DynamoDBDocument.from(new DynamoDB({ region }));
   const scanResult = await db
     .scan({
-      AttributesToGet: keySchema.map((key) => key.AttributeName),
+      AttributesToGet: keySchema.map((key) => key.AttributeName!),
       TableName: tableName,
-    })
-    .promise();
+    });
   const items = scanResult.Items || [];
 
-  if (items.length > 0) {
-    for (const chunk of chunks(items, 25)) {
-      const deleteRequests = chunk.map((item) => ({
-        DeleteRequest: { Key: itemToKey(item, keySchema) },
-      }));
+  if (items.length == 0) {
+    return undefined;
+  }
 
-      await db
-        .batchWrite({ RequestItems: { [tableName]: deleteRequests } })
-        .promise();
-    }
+  for (const chunk of chunks(items, 25)) {
+    const deleteRequests = chunk.map((item) => ({
+      DeleteRequest: { Key: itemToKey(item, keySchema) },
+    }));
+
+    await db
+      .batchWrite({ RequestItems: { [tableName]: deleteRequests } });
   }
 };
 
 export const writeItems = async (
   region: string,
   tableName: string,
-  items: AWS.DynamoDB.DocumentClient.PutItemInputAttributeMap[],
+  items: Record<string, any>[],
 ) => {
-  const db = new AWS.DynamoDB.DocumentClient({ region });
+  const db = DynamoDBDocument.from(new DynamoDB({ region }));
   const writeRequests = items.map((item) => ({
     PutRequest: { Item: item },
   }));
 
   await db
-    .batchWrite({ RequestItems: { [tableName]: writeRequests } })
-    .promise();
+    .batchWrite({ RequestItems: { [tableName]: writeRequests } });
 };
 
 export const getItem = async (
   region: string,
   tableName: string,
-  key: AWS.DynamoDB.DocumentClient.Key,
+  key: Record<string, any>,
 ) => {
-  const db = new AWS.DynamoDB.DocumentClient({ region });
-  const dbItem = await db.get({ TableName: tableName, Key: key }).promise();
+  const db = DynamoDBDocument.from(new DynamoDB({ region }));
+  const dbItem = await db.get({ TableName: tableName, Key: key });
   // Item is undefined if key not found
   return dbItem.Item;
 };

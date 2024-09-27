@@ -10,7 +10,7 @@ jest.mock('aws-sdk', () => {
 });
 
 describe('lambda utils', () => {
-  const AWS = require('aws-sdk');
+  import * as AWS from 'aws-sdk';
   const lambda = AWS.Lambda;
 
   const [region, functionName] = ['region', 'functionName'];

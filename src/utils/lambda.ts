@@ -1,11 +1,13 @@
-import AWS = require('aws-sdk');
+import { Lambda } from '@aws-sdk/client-lambda';
 
 export const invoke = async (
   region: string,
   functionName: string,
   payload?: any,
 ) => {
-  const lambda = new AWS.Lambda({ region });
+  const lambda = new Lambda({
+    region,
+  });
 
   const lambdaPayload = payload ? { Payload: JSON.stringify(payload) } : {};
   const params = {
@@ -13,10 +15,6 @@ export const invoke = async (
     ...lambdaPayload,
   };
 
-  const { Payload } = await lambda.invoke(params).promise();
-  if (Payload) {
-    return JSON.parse(Payload.toString());
-  } else {
-    return undefined;
-  }
+  const { Payload } = await lambda.invoke(params);
+  return Payload ? JSON.parse(Payload.toString()) : undefined;
 };

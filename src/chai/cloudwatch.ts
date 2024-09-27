@@ -1,7 +1,7 @@
-import { epochDateMinusHours, verifyProps } from '../common';
-import { expectedProps, ICloudwatchProps } from '../common/cloudwatch';
-import { filterLogEvents, getLogGroupName } from '../utils/cloudwatch';
-import { wrapWithRetries } from './utils';
+import { epochDateMinusHours, verifyProps } from '../common/index.js';
+import { expectedProps, ICloudwatchProps } from '../common/cloudwatch.js';
+import { filterLogEvents, getLogGroupName } from '../utils/cloudwatch.js';
+import { wrapWithRetries } from './utils.js';
 
 const attemptCloudwatch = async function (this: any, pattern: string) {
   const props = this._obj as ICloudwatchProps;

@@ -1,8 +1,8 @@
 import { diff } from 'jest-diff';
 import { EOL } from 'os';
-import { verifyProps } from '../common';
-import { expectedProps, IS3Props } from '../common/s3';
-import { getObject } from '../utils/s3';
+import { verifyProps } from '../common/index.js';
+import { expectedProps, IS3Props } from '../common/s3.js';
+import { getObject } from '../utils/s3.js';
 
 export const toHaveObject = async function (
   this: jest.MatcherUtils,
@@ -24,44 +24,41 @@ export const toHaveObject = async function (
 
     const { body: received, found } = await getObject(region, bucket, key);
     // check if object was found
-    if (found) {
-      // no expected buffer to compare with
-      if (!expected) {
-        return {
-          message: () =>
-            `${notHint}Expected ${printBucket} at region ${printRegion} not to have object with key ${printKey}`,
-          pass: true,
-        };
-      } else {
-        // we check equality as well
-        const pass = this.equals(expected, received);
-
-        const printReceived = this.utils.printReceived(received);
-        const printExpected = this.utils.printExpected(expected);
-
-        if (pass) {
-          return {
-            message: () =>
-              `${notHint}Expected object ${printReceived} not to equal ${printExpected}`,
-            pass: true,
-          };
-        } else {
-          const diffString = diff(expected, received, {
-            expand: true,
-          });
-          return {
-            message: () =>
-              `${hint}Expected object ${printReceived} to equal ${printExpected}${EOL}` +
-              `Difference:${diffString ? `${EOL}${EOL}${diffString}` : ''}`,
-            pass: false,
-          };
-        }
-      }
-    } else {
-      // no item was found
+    if (!found) {
       return {
         message: () =>
           `${hint}Expected ${printBucket} at region ${printRegion} to have object with key ${printKey}`,
+        pass: false,
+      };
+    }
+    // no expected buffer to compare with
+    if (!expected) {
+      return {
+        message: () =>
+          `${notHint}Expected ${printBucket} at region ${printRegion} not to have object with key ${printKey}`,
+        pass: true,
+      };
+    } 
+    // we check equality as well
+    const pass = this.equals(expected, received);
+
+    const printReceived = this.utils.printReceived(received);
+    const printExpected = this.utils.printExpected(expected);
+
+    if (pass) {
+      return {
+        message: () =>
+          `${notHint}Expected object ${printReceived} not to equal ${printExpected}`,
+        pass: true,
+      };
+    } else {
+      const diffString = diff(expected, received, {
+        expand: true,
+      });
+      return {
+        message: () =>
+          `${hint}Expected object ${printReceived} to equal ${printExpected}${EOL}` +
+          `Difference:${diffString ? `${EOL}${EOL}${diffString}` : ''}`,
         pass: false,
       };
     }

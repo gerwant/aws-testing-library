@@ -1,4 +1,4 @@
-import { epochDateMinusHours, sleep, verifyProps } from './';
+import { epochDateMinusHours, sleep, verifyProps } from './index.js';
 
 describe('common index', () => {
   afterEach(() => {

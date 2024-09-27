@@ -1,6 +1,6 @@
 import filterObject from 'filter-obj';
-import { AttributeMap } from 'aws-sdk/clients/dynamodb';
-import { ICommonProps } from './';
+import { AttributeValue } from '@aws-sdk/client-dynamodb';
+import { ICommonProps } from './index.js';
 
 export interface IDynamoDbProps extends ICommonProps {
   table: string;
@@ -9,8 +9,8 @@ export interface IDynamoDbProps extends ICommonProps {
 export const expectedProps = ['region', 'table', 'key'];
 
 export const removeKeysFromItemForNonStrictComparison = (
-  received: AttributeMap,
-  expected: AttributeMap,
+  received: Record<string, AttributeValue>,
+  expected: Record<string, AttributeValue>,
 ) => {
   return filterObject(received, (key) =>
     Object.prototype.hasOwnProperty.call(expected, key),

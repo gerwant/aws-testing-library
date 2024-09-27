@@ -1,14 +1,15 @@
-import { IExpectedResponse } from '../common/api';
-import { IRecordMatcher } from '../utils/kinesis';
-import { IMessageMatcher } from '../utils/sqs';
+import { AttributeValue } from '@aws-sdk/client-dynamodb';
+import { IExpectedResponse } from '../common/api.js';
+import { IRecordMatcher } from '../utils/kinesis.js';
+import { IMessageMatcher } from '../utils/sqs.js';
 
-import api from './api';
-import cloudwatch from './cloudwatch';
-import dynamoDb from './dynamoDb';
-import kinesis from './kinesis';
-import s3 from './s3';
-import sqs from './sqs';
-import stepFunctions from './stepFunctions';
+import api from './api.js';
+import cloudwatch from './cloudwatch.js';
+import dynamoDb from './dynamoDb.js';
+import kinesis from './kinesis.js';
+import s3 from './s3.js';
+import sqs from './sqs.js';
+import stepFunctions from './stepFunctions.js';
 
 declare global {
   namespace Chai {
@@ -17,8 +18,8 @@ declare global {
       response: (expected: IExpectedResponse) => Assertion;
       log: (pattern: string) => Assertion;
       item: (
-        key: AWS.DynamoDB.DocumentClient.Key,
-        expectedItem?: AWS.DynamoDB.DocumentClient.AttributeMap,
+        key: Record<string, any>,
+        expectedItem?: Record<string, AttributeValue>,
         strict?: boolean,
       ) => Assertion;
       record: (matcher: IRecordMatcher) => Assertion;
